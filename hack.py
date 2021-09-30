@@ -1,16 +1,20 @@
 import sys
 import socket
 from itertools import product
-from string import ascii_lowercase, digits
+from path import file_path
 
 
-def pass_gen():
-    for i in range(1, 11):
-        for combination in product(ascii_lowercase + digits, repeat=i):
-            yield ''.join(combination)
+def pass_gen():  # The generator will sort through all the variants of upper and lower letters in a word from file
+    with open(file_path, 'r') as file:
+        for line in file:
+            pass_list = []
+            for letter in line.strip():
+                pass_list.append(letter.lower() + letter.upper())
+            for i in product(*pass_list):
+                yield ''.join(i)
 
 
-if len(sys.argv) < 3:
+if len(sys.argv) < 3:  # Running the program should look like "python3 hack.py localhost 9090"
     print('Input: IP address and port for sending')
     sys.exit(1)
 ip, port = sys.argv[1], int(sys.argv[2])
